@@ -15,7 +15,7 @@ export default function AdminClient() {
 
   async function loadData() {
     const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return router.push('/login')
+    if (!user) return router.push('/admin/login')
 
     const { data: myAgent } = await supabase
       .from('agents').select('*').eq('user_id', user.id).single()
