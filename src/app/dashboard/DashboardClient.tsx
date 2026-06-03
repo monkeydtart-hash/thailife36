@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
-import type { Agent, AgentProduct, AgentAward } from '@/lib/types'
+import type { Agent, AgentProduct, AgentAward, AgentVideo } from '@/lib/types'
 import ImageCropper from './ImageCropper'
 
 // ---- Sub-components ----
@@ -45,6 +45,7 @@ export default function DashboardClient() {
   const [agent, setAgent] = useState<Agent | null>(null)
   const [products, setProducts] = useState<AgentProduct[]>([])
   const [awards, setAwards] = useState<AgentAward[]>([])
+  const [videos, setVideos] = useState<AgentVideo[]>([])
   const [loading, setLoading] = useState(true)
   const [loadError, setLoadError] = useState('')
   const [saving, setSaving] = useState(false)
@@ -92,6 +93,13 @@ export default function DashboardClient() {
       .eq('agent_id', agentData.id)
       .order('sort_order')
     setAwards(awds || [])
+
+    const { data: vids } = await supabase
+      .from('agent_videos')
+      .select('*')
+      .eq('agent_id', agentData.id)
+      .order('sort_order')
+    setVideos(vids || [])
 
     setLoading(false)
   }
@@ -183,6 +191,25 @@ export default function DashboardClient() {
     await supabase.from('agent_awards').delete().eq('id', id)
   }
 
+  async function addVideo() {
+    if (!agent || videos.length >= 5) return
+    const { data } = await supabase
+      .from('agent_videos')
+      .insert({ agent_id: agent.id, youtube_url: '', sort_order: videos.length })
+      .select().single()
+    if (data) setVideos(v => [...v, data])
+  }
+
+  async function updateVideo(id: string, updates: Partial<AgentVideo>) {
+    setVideos(v => v.map(x => x.id === id ? { ...x, ...updates } : x))
+    await supabase.from('agent_videos').update(updates).eq('id', id)
+  }
+
+  async function deleteVideo(id: string) {
+    setVideos(v => v.filter(x => x.id !== id))
+    await supabase.from('agent_videos').delete().eq('id', id)
+  }
+
   async function handleLogout() {
     await supabase.auth.signOut()
     router.push('/login')
@@ -215,6 +242,7 @@ export default function DashboardClient() {
     { key: 'profile', label: 'โปรไฟล์' },
     { key: 'products', label: 'แบบประกัน' },
     { key: 'awards', label: 'รางวัล' },
+    { key: 'videos', label: 'วิดีโอ' },
   ] as const
 
   const categoryOptions = [
@@ -365,12 +393,7 @@ export default function DashboardClient() {
               value={agent.booking_url || ''}
               onChange={e => setAgent(a => a ? { ...a, booking_url: e.target.value } : a)} />
 
-            <SectionTitle>วิดีโอแนะนำตัว</SectionTitle>
-            <InputField label="YouTube URL"
-              placeholder="https://youtu.be/..."
-              value={agent.video_url || ''}
-              onChange={e => setAgent(a => a ? { ...a, video_url: e.target.value } : a)} />
-            <p className="text-xs text-gray-400 -mt-2">วางลิงก์ YouTube ที่นี่ ระบบจะแสดงวิดีโอในหน้าโปรไฟล์อัตโนมัติ</p>
+            <p className="text-xs text-gray-400">จัดการวิดีโอได้ที่ tab "วิดีโอ" ด้านบนครับ</p>
           </div>
         )}
 
@@ -455,6 +478,35 @@ export default function DashboardClient() {
             </button>
           </div>
         )}
+        {/* ---- TAB: VIDEOS ---- */}
+        {activeTab === 'videos' && (
+          <div className="space-y-3">
+            <p className="text-xs text-gray-400">เพิ่มได้สูงสุด 5 คลิป — วางลิงก์ YouTube แล้วกดบันทึก</p>
+            {videos.map((vid, i) => (
+              <div key={vid.id} className="card space-y-2.5">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-semibold text-[#003087]">คลิปที่ {i + 1}</span>
+                  <button onClick={() => deleteVideo(vid.id)} className="text-red-400 text-xs hover:text-red-600">ลบ</button>
+                </div>
+                <input className="input-field" placeholder="ชื่อคลิป (ไม่บังคับ)"
+                  value={vid.title || ''}
+                  onChange={e => updateVideo(vid.id, { title: e.target.value })} />
+                <input className="input-field" placeholder="https://youtu.be/..."
+                  value={vid.youtube_url}
+                  onChange={e => updateVideo(vid.id, { youtube_url: e.target.value })} />
+              </div>
+            ))}
+            {videos.length < 5 ? (
+              <button onClick={addVideo}
+                className="w-full py-3 border-2 border-dashed border-[#003087]/30 rounded-xl text-[#003087] text-sm font-semibold hover:border-[#003087] hover:bg-[#003087]/5 transition-colors">
+                + เพิ่มคลิป ({videos.length}/5)
+              </button>
+            ) : (
+              <p className="text-center text-gray-400 text-xs py-2">ครบ 5 คลิปแล้ว</p>
+            )}
+          </div>
+        )}
+
       </div>
 
       {/* Save bar */}

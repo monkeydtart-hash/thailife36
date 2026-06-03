@@ -48,7 +48,8 @@ export default async function ProfilePage({ params }: { params: { slug: string }
     .select(`
       *,
       agent_products ( * ),
-      agent_awards ( * )
+      agent_awards ( * ),
+      agent_videos ( * )
     `)
     .eq('slug', params.slug)
     .eq('is_active', true)
@@ -64,6 +65,7 @@ export default async function ProfilePage({ params }: { params: { slug: string }
     ...agent,
     agent_products: (agent.agent_products || []).sort((a: any, b: any) => a.sort_order - b.sort_order),
     agent_awards: (agent.agent_awards || []).sort((a: any, b: any) => a.sort_order - b.sort_order),
+    agent_videos: (agent.agent_videos || []).sort((a: any, b: any) => a.sort_order - b.sort_order),
   }
 
   return <ProfileClient agent={agentFull} />

@@ -51,7 +51,16 @@ export type News = {
   created_at: string
 }
 
+export type AgentVideo = {
+  id: string
+  agent_id: string
+  title: string | null
+  youtube_url: string
+  sort_order: number
+}
+
 export type AgentFull = Agent & {
   agent_products: AgentProduct[]
   agent_awards: AgentAward[]
+  agent_videos: AgentVideo[]
 }

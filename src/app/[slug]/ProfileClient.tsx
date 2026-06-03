@@ -20,6 +20,7 @@ const categoryBg: Record<string, string> = {
 export default function ProfileClient({ agent }: { agent: AgentFull }) {
   const profileUrl = `https://thailife36.com/${agent.slug}`
   const videoId = agent.video_url ? getYouTubeId(agent.video_url) : null
+  const videos = agent.agent_videos?.filter(v => getYouTubeId(v.youtube_url)) || []
   const initials = agent.full_name.slice(0, 1)
 
   function copyLink() {
@@ -93,32 +94,38 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
       {/* ── WHITE BODY ── */}
       <div className="bg-white">
 
-        {/* VIDEO */}
-        {videoId && (
-          <section className="px-4 pt-5 pb-1">
-            <div className="section-title"><span className="w-1.5 h-1.5 rounded-full bg-[#E31E24]" />วิดีโอแนะนำตัว</div>
-            <div className="rounded-xl overflow-hidden border border-[#003087]/10 max-w-xs mx-auto" style={{ aspectRatio: '16/9' }}>
-              <iframe
-                src={`https://www.youtube.com/embed/${videoId}`}
-                className="w-full h-full"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
+        {/* VIDEOS */}
+        <section className="px-4 pt-5 pb-1">
+          <div className="section-title"><span className="w-1.5 h-1.5 rounded-full bg-[#E31E24]" />วิดีโอแนะนำตัว</div>
+          {videos.length > 0 ? (
+            <div className="space-y-3">
+              {videos.map(vid => {
+                const id = getYouTubeId(vid.youtube_url)
+                if (!id) return null
+                return (
+                  <div key={vid.id}>
+                    {vid.title && <p className="text-[#003087] text-xs font-semibold mb-1.5">{vid.title}</p>}
+                    <div className="rounded-xl overflow-hidden border border-[#003087]/10 max-w-xs mx-auto" style={{ aspectRatio: '16/9' }}>
+                      <iframe
+                        src={`https://www.youtube.com/embed/${id}`}
+                        className="w-full h-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                      />
+                    </div>
+                  </div>
+                )
+              })}
             </div>
-          </section>
-        )}
-
-        {!videoId && (
-          <section className="px-4 pt-5 pb-1">
-            <div className="section-title"><span className="w-1.5 h-1.5 rounded-full bg-[#E31E24]" />วิดีโอแนะนำตัว</div>
-            <div className="bg-[#001440] rounded-xl h-40 flex flex-col items-center justify-center gap-2 border border-[#003087]/12">
-              <div className="w-12 h-12 rounded-full bg-[#E31E24] flex items-center justify-center">
-                <svg className="w-5 h-5 text-white fill-white ml-0.5" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
+          ) : (
+            <div className="bg-[#001440] rounded-xl h-32 flex flex-col items-center justify-center gap-2 border border-[#003087]/12">
+              <div className="w-10 h-10 rounded-full bg-[#E31E24] flex items-center justify-center">
+                <svg className="w-4 h-4 text-white fill-white ml-0.5" viewBox="0 0 24 24"><polygon points="5,3 19,12 5,21"/></svg>
               </div>
               <p className="text-white/40 text-xs">วิดีโอแนะนำตัว</p>
             </div>
-          </section>
-        )}
+          )}
+        </section>
 
         <div className="h-px bg-gray-100 mx-4 my-1" />
 
