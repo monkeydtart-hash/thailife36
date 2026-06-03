@@ -79,7 +79,6 @@ export default function RegisterPage() {
       })
       if (profileErr) throw profileErr
 
-      router.refresh()
       router.push('/dashboard?welcome=1&pending=1')
     } catch (err: any) {
       setError(err.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่')

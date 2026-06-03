@@ -59,14 +59,19 @@ export default function DashboardClient() {
     const { data: { user } } = await supabase.auth.getUser()
     if (!user) return router.push('/login')
 
-    const { data: agentData } = await supabase
+    const { data: agentData, error: agentError } = await supabase
       .from('agents')
       .select('*')
       .eq('user_id', user.id)
       .single()
 
+    if (agentError && agentError.code !== 'PGRST116') {
+      // transient error — keep session, show message
+      setLoading(false)
+      return
+    }
     if (!agentData) {
-      await supabase.auth.signOut()
+      // authenticated but no agent row — send to register without destroying session
       return router.push('/register')
     }
     setAgent(agentData)
@@ -114,10 +119,12 @@ export default function DashboardClient() {
         }
       }
 
+      // exclude generated/immutable columns from update
+      const { id, user_id, profile_url, created_at, updated_at, ...editableFields } = agent
       const { error } = await supabase
         .from('agents')
-        .update({ ...agent, avatar_url })
-        .eq('id', agent.id)
+        .update({ ...editableFields, avatar_url })
+        .eq('id', id)
 
       if (!error) {
         setAgent(a => a ? { ...a, avatar_url } : a)
