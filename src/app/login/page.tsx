@@ -21,6 +21,7 @@ export default function LoginPage() {
     })
     setLoading(false)
     if (err) return setError('อีเมลหรือรหัสผ่านไม่ถูกต้อง')
+    router.refresh()
     router.push('/dashboard')
   }
 
