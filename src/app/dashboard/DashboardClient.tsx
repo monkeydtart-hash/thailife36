@@ -65,7 +65,10 @@ export default function DashboardClient() {
       .eq('user_id', user.id)
       .single()
 
-    if (!agentData) return router.push('/register')
+    if (!agentData) {
+      await supabase.auth.signOut()
+      return router.push('/register')
+    }
     setAgent(agentData)
 
     const { data: prods } = await supabase
