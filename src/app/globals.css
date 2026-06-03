@@ -1,0 +1,50 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --navy:  #003087;
+  --red:   #E31E24;
+  --gold:  #F5A623;
+  --navy-dark: #001a5e;
+  --navy-deep: #001440;
+}
+
+@layer base {
+  body {
+    font-family: var(--font-sarabun), 'Sarabun', sans-serif;
+    color: #1a1a2e;
+  }
+  h1, h2, h3 {
+    font-family: var(--font-serif-thai), serif;
+  }
+}
+
+@layer components {
+  .btn-primary {
+    @apply bg-[#E31E24] text-white font-semibold py-3 px-6 rounded-xl
+           hover:opacity-90 active:scale-95 transition-all w-full text-center;
+  }
+  .btn-outline-navy {
+    @apply border-2 border-[#003087] text-[#003087] font-semibold py-3 px-6 rounded-xl
+           hover:bg-[#003087] hover:text-white transition-all w-full text-center;
+  }
+  .input-field {
+    @apply w-full border border-gray-200 rounded-xl px-4 py-3 text-sm
+           focus:outline-none focus:ring-2 focus:ring-[#003087] focus:border-transparent
+           placeholder:text-gray-400 bg-white transition-all;
+  }
+  .section-title {
+    @apply flex items-center gap-2 text-[#003087] font-semibold text-sm mb-3;
+  }
+  .section-title::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, #E31E24, transparent);
+    margin-left: 4px;
+  }
+  .card {
+    @apply bg-[#f8f9ff] border border-[#e8ecf8] rounded-xl p-4;
+  }
+}
