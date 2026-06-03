@@ -10,12 +10,24 @@ export default function ResetPasswordPage() {
   const [confirm, setConfirm] = useState('')
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-  const [ready, setReady] = useState(false)
+  const [checking, setChecking] = useState(true)
+  const [hasSession, setHasSession] = useState(false)
 
   useEffect(() => {
-    supabase.auth.onAuthStateChange((event) => {
-      if (event === 'PASSWORD_RECOVERY') setReady(true)
+    // ตรวจสอบ session จาก hash fragment ที่ Supabase ส่งมา
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setHasSession(!!session)
+      setChecking(false)
     })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === 'PASSWORD_RECOVERY' || event === 'SIGNED_IN') {
+        setHasSession(!!session)
+        setChecking(false)
+      }
+    })
+
+    return () => subscription.unsubscribe()
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {
@@ -27,7 +39,8 @@ export default function ResetPasswordPage() {
     const { error: err } = await supabase.auth.updateUser({ password })
     setLoading(false)
     if (err) return setError(err.message)
-    router.push('/dashboard')
+    await supabase.auth.signOut()
+    router.push('/login')
   }
 
   return (
@@ -44,8 +57,16 @@ export default function ResetPasswordPage() {
         <h1 className="font-serif-thai text-2xl font-bold text-[#003087] mb-1">ตั้งรหัสผ่านใหม่</h1>
         <p className="text-gray-500 text-sm mb-8">กรุณากรอกรหัสผ่านใหม่ของคุณ</p>
 
-        {!ready ? (
-          <div className="text-center text-gray-400 text-sm py-8">กำลังตรวจสอบลิงก์...</div>
+        {checking ? (
+          <div className="text-center text-gray-400 text-sm py-8">กำลังตรวจสอบ...</div>
+        ) : !hasSession ? (
+          <div className="bg-red-50 border border-red-200 rounded-xl p-5 text-center">
+            <p className="text-red-600 font-semibold mb-2">ลิงก์หมดอายุหรือไม่ถูกต้อง</p>
+            <p className="text-red-500 text-sm mb-4">กรุณาขอลิงก์รีเซ็ตรหัสผ่านใหม่อีกครั้ง</p>
+            <a href="/forgot-password" className="text-[#003087] text-sm font-semibold hover:underline">
+              ขอลิงก์ใหม่ →
+            </a>
+          </div>
         ) : (
           <>
             {error && (
