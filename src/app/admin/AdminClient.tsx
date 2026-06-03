@@ -106,7 +106,7 @@ export default function AdminClient() {
     <div className="min-h-screen bg-[#f8f9ff]">
       <div className="bg-[#003087] px-5 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-[#E31E24] rounded-lg flex items-center justify-center text-white font-bold text-sm">ทช</div>
+          <div className="w-8 h-8 bg-[#E31E24] rounded-lg flex items-center justify-center text-white font-bold text-sm">36</div>
           <div>
             <p className="text-white text-sm font-medium">Admin Panel</p>
             <p className="text-[#F5A623] text-[10px]">Thai Life Digital Office</p>

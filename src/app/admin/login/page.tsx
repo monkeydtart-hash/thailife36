@@ -49,7 +49,7 @@ export default function AdminLoginPage() {
         {/* Logo */}
         <div className="flex flex-col items-center mb-8">
           <div className="w-14 h-14 bg-[#E31E24] rounded-2xl flex items-center justify-center text-white font-bold text-2xl font-serif-thai mb-3 shadow-lg">
-            ทช
+            36
           </div>
           <p className="text-white font-semibold text-lg">Admin Panel</p>
           <p className="text-white/40 text-xs mt-1">Thai Life Digital Office</p>

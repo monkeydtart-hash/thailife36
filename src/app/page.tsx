@@ -19,7 +19,7 @@ export default async function HomePage() {
       {/* Header */}
       <div className="bg-[#003087] px-5 py-4 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 bg-[#E31E24] rounded-xl flex items-center justify-center text-white font-bold text-sm font-serif-thai shadow">ทช</div>
+          <div className="w-9 h-9 bg-[#E31E24] rounded-xl flex items-center justify-center text-white font-bold text-sm font-serif-thai shadow">36</div>
           <div>
             <p className="text-white text-sm font-semibold leading-tight">ไทยประกันชีวิต</p>
             <p className="text-[#F5A623] text-[10px] tracking-wide">DIGITAL OFFICE</p>

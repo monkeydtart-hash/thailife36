@@ -46,7 +46,7 @@ export default function ResetPasswordPage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="bg-[#003087] px-5 py-4 flex items-center gap-3">
-        <div className="w-8 h-8 bg-[#E31E24] rounded-lg flex items-center justify-center text-white font-bold text-sm font-serif-thai">ทช</div>
+        <div className="w-8 h-8 bg-[#E31E24] rounded-lg flex items-center justify-center text-white font-bold text-sm font-serif-thai">36</div>
         <div>
           <p className="text-white text-sm font-medium leading-tight">ไทยประกันชีวิต</p>
           <p className="text-[#F5A623] text-[10px]">DIGITAL OFFICE</p>

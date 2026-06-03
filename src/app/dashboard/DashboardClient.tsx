@@ -236,7 +236,7 @@ export default function DashboardClient() {
       {/* Header */}
       <div className="bg-[#003087] px-5 py-3 flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-3">
-          <div className="w-7 h-7 bg-[#E31E24] rounded-lg flex items-center justify-center text-white font-bold text-xs font-serif-thai">ทช</div>
+          <div className="w-7 h-7 bg-[#E31E24] rounded-lg flex items-center justify-center text-white font-bold text-xs font-serif-thai">36</div>
           <div>
             <p className="text-white text-xs font-medium leading-tight">Dashboard</p>
             <p className="text-[#F5A623] text-[10px]">Digital Office</p>

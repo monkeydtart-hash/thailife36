@@ -44,7 +44,7 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
         {/* Top bar */}
         <div className="flex items-center justify-between px-5 py-3 border-b border-white/8">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 bg-[#E31E24] rounded-lg flex items-center justify-center text-white font-bold text-sm font-serif-thai">ทช</div>
+            <div className="w-8 h-8 bg-[#E31E24] rounded-lg flex items-center justify-center text-white font-bold text-sm font-serif-thai">36</div>
             <div>
               <p className="text-white text-xs font-medium leading-tight">บริษัท ไทยประกันชีวิต จำกัด (มหาชน)</p>
               <p className="text-[#F5A623] text-[10px] tracking-wide">THAI LIFE INSURANCE</p>
