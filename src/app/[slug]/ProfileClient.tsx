@@ -97,7 +97,7 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
         {videoId && (
           <section className="px-4 pt-5 pb-1">
             <div className="section-title"><span className="w-1.5 h-1.5 rounded-full bg-[#E31E24]" />วิดีโอแนะนำตัว</div>
-            <div className="rounded-xl overflow-hidden border border-[#003087]/10" style={{ aspectRatio: '16/9' }}>
+            <div className="rounded-xl overflow-hidden border border-[#003087]/10 max-w-xs mx-auto" style={{ aspectRatio: '16/9' }}>
               <iframe
                 src={`https://www.youtube.com/embed/${videoId}`}
                 className="w-full h-full"
