@@ -26,6 +26,29 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
     navigator.clipboard.writeText(profileUrl)
   }
 
+  function downloadQR() {
+    const svg = document.getElementById('profile-qr')?.querySelector('svg')
+    if (!svg) return
+    const canvas = document.createElement('canvas')
+    canvas.width = 300
+    canvas.height = 300
+    const ctx = canvas.getContext('2d')!
+    const img = new Image()
+    const blob = new Blob([svg.outerHTML], { type: 'image/svg+xml' })
+    const url = URL.createObjectURL(blob)
+    img.onload = () => {
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(0, 0, 300, 300)
+      ctx.drawImage(img, 0, 0, 300, 300)
+      URL.revokeObjectURL(url)
+      const a = document.createElement('a')
+      a.download = `qr-${agent.slug}.png`
+      a.href = canvas.toDataURL('image/png')
+      a.click()
+    }
+    img.src = url
+  }
+
   return (
     <div className="min-h-screen bg-white font-sarabun">
 
@@ -210,16 +233,22 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
         <section className="px-4 pt-4 pb-1">
           <div className="section-title"><span className="w-1.5 h-1.5 rounded-full bg-[#E31E24]" />QR Code ลิงก์โปรไฟล์</div>
           <div className="bg-[#f8f9ff] rounded-xl border border-[#e8ecf8] p-4 flex items-center gap-4">
-            <div className="flex-shrink-0 p-2 bg-white rounded-xl border border-[#e8ecf8]">
+            <div id="profile-qr" className="flex-shrink-0 p-2 bg-white rounded-xl border border-[#e8ecf8]">
               <QRCodeSVG value={profileUrl} size={72} fgColor="#003087" bgColor="#ffffff" level="M" />
             </div>
             <div className="flex-1">
               <p className="text-[#003087] text-sm font-semibold mb-1">ลิงก์โปรไฟล์ส่วนตัว</p>
               <p className="text-gray-400 text-xs mb-2 leading-snug">แชร์ให้ลูกค้าเพื่อดูข้อมูลและติดต่อได้ทันที</p>
-              <button onClick={copyLink}
-                className="text-[#E31E24] text-xs font-bold bg-[#E31E24]/8 px-3 py-1.5 rounded-lg hover:bg-[#E31E24]/15 transition-colors">
-                คัดลอกลิงก์
-              </button>
+              <div className="flex gap-2">
+                <button onClick={copyLink}
+                  className="text-[#E31E24] text-xs font-bold bg-[#E31E24]/8 px-3 py-1.5 rounded-lg hover:bg-[#E31E24]/15 transition-colors">
+                  คัดลอกลิงก์
+                </button>
+                <button onClick={downloadQR}
+                  className="text-[#003087] text-xs font-bold bg-[#003087]/8 px-3 py-1.5 rounded-lg hover:bg-[#003087]/15 transition-colors">
+                  ดาวน์โหลด QR
+                </button>
+              </div>
             </div>
           </div>
         </section>

@@ -60,7 +60,10 @@ export default function LoginPage() {
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-500 mt-6">
+        <p className="text-center text-sm text-gray-500 mt-4">
+          <Link href="/forgot-password" className="text-gray-400 hover:text-[#003087] hover:underline">ลืมรหัสผ่าน?</Link>
+        </p>
+        <p className="text-center text-sm text-gray-500 mt-2">
           ยังไม่มีบัญชี?{' '}
           <Link href="/register" className="text-[#003087] font-semibold hover:underline">สมัครฟรี</Link>
         </p>

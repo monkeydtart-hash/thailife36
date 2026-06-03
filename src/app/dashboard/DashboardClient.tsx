@@ -227,10 +227,16 @@ export default function DashboardClient() {
             <p className="text-[#F5A623] text-[10px]">Digital Office</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2">
+          {agent.is_admin && (
+            <Link href="/admin"
+              className="text-white/70 text-xs border border-white/20 px-2.5 py-1.5 rounded-lg hover:bg-white/10 transition-colors">
+              Admin
+            </Link>
+          )}
           <Link href={'/' + agent.slug} target="_blank"
             className="text-[#F5A623] text-xs font-semibold border border-[#F5A623]/40 px-3 py-1.5 rounded-lg hover:bg-[#F5A623]/10 transition-colors">
-            ดูหน้าโปรไฟล์ →
+            ดูโปรไฟล์ →
           </Link>
           <button onClick={handleLogout} className="text-white/50 text-xs hover:text-white transition-colors">
             ออก
@@ -257,6 +263,7 @@ export default function DashboardClient() {
         <div>
           <span className="text-[11px] text-gray-500">ลิงก์โปรไฟล์ของคุณ</span>
           <p className="text-[#E31E24] text-sm font-bold">thailife36.com/{agent.slug}</p>
+          <p className="text-gray-400 text-[11px] mt-0.5">👁 ลูกค้าเปิดดู {agent.view_count} ครั้ง</p>
         </div>
         <button
           onClick={() => navigator.clipboard.writeText('https://thailife36.com/' + agent.slug)}

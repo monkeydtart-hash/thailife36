@@ -16,6 +16,7 @@ export type Agent = {
   profile_url: string
   is_active: boolean
   is_admin: boolean
+  view_count: number
   created_at: string
   updated_at: string
 }

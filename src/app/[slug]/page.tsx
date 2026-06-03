@@ -16,12 +16,26 @@ export async function generateMetadata({ params }: { params: { slug: string } })
     .single()
 
   if (!data) return { title: 'ไม่พบหน้านี้' }
+  const title = `${data.full_name} — ตัวแทนไทยประกันชีวิต${data.branch ? ' ' + data.branch : ''}`
+  const description = data.bio || 'ตัวแทนประกันชีวิตไทยประกันชีวิต ให้คำปรึกษาฟรี ไม่มีค่าใช้จ่าย'
+  const url = `https://thailife36.com/${params.slug}`
   return {
-    title: `${data.full_name} — ตัวแทนไทยประกันชีวิต${data.branch ? ' ' + data.branch : ''}`,
-    description: data.bio || 'ตัวแทนประกันชีวิตไทยประกันชีวิต ให้คำปรึกษาฟรี',
+    title,
+    description,
     openGraph: {
-      title: data.full_name,
-      description: data.bio || 'ตัวแทนประกันชีวิต',
+      title,
+      description,
+      url,
+      type: 'profile',
+      images: data.avatar_url ? [{ url: data.avatar_url, width: 400, height: 400 }] : [],
+      siteName: 'Thai Life Digital Office',
+      locale: 'th_TH',
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+      images: data.avatar_url ? [data.avatar_url] : [],
     },
   }
 }
@@ -41,6 +55,9 @@ export default async function ProfilePage({ params }: { params: { slug: string }
     .single()
 
   if (!agent) notFound()
+
+  // นับ page view (fire-and-forget)
+  supabase.rpc('increment_view_count', { agent_id: agent.id }).then(() => {})
 
   // เรียง products และ awards
   const agentFull: AgentFull = {
