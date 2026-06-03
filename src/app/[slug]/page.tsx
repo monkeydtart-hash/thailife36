@@ -10,7 +10,7 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   const supabase = createServerSupabase()
   const { data } = await supabase
     .from('agents')
-    .select('full_name, branch, bio')
+    .select('full_name, branch, bio, avatar_url')
     .eq('slug', params.slug)
     .eq('is_active', true)
     .single()
