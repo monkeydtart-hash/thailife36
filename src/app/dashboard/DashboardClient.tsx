@@ -50,7 +50,7 @@ export default function DashboardClient() {
   const [loadError, setLoadError] = useState('')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
-  const [activeTab, setActiveTab] = useState<'profile' | 'products' | 'awards'>('profile')
+  const [activeTab, setActiveTab] = useState<'profile' | 'products' | 'awards' | 'videos'>('profile')
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
   const [cropSrc, setCropSrc] = useState<string | null>(null)
