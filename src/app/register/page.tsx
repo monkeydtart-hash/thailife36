@@ -75,10 +75,11 @@ export default function RegisterPage() {
         agent_code: form.agent_code || null,
         branch: form.branch || null,
         phone: form.phone || null,
+        is_active: false,
       })
       if (profileErr) throw profileErr
 
-      router.push('/dashboard?welcome=1')
+      router.push('/dashboard?welcome=1&pending=1')
     } catch (err: any) {
       setError(err.message || 'เกิดข้อผิดพลาด กรุณาลองใหม่')
     } finally {

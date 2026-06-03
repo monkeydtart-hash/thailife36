@@ -214,8 +214,15 @@ export default function DashboardClient() {
         </div>
       </div>
 
+      {/* Pending approval banner */}
+      {!agent.is_active && (
+        <div className="bg-yellow-50 border-b border-yellow-200 px-5 py-3 text-yellow-800 text-sm font-medium">
+          ⏳ โปรไฟล์ของคุณกำลังรอการอนุมัติจาก Admin — หน้าโปรไฟล์จะแสดงสาธารณะหลังได้รับการอนุมัติ
+        </div>
+      )}
+
       {/* Welcome banner */}
-      {searchParams.get('welcome') && (
+      {searchParams.get('welcome') && agent.is_active && (
         <div className="bg-green-50 border-b border-green-200 px-5 py-3 text-green-700 text-sm font-medium">
           🎉 ยินดีต้อนรับ! โปรไฟล์ของคุณถูกสร้างแล้วที่ <span className="font-bold">thailife36.com/{agent.slug}</span>
         </div>

@@ -15,6 +15,7 @@ export type Agent = {
   booking_url: string | null
   profile_url: string
   is_active: boolean
+  is_admin: boolean
   created_at: string
   updated_at: string
 }
