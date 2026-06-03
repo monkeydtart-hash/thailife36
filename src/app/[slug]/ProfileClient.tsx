@@ -1,5 +1,5 @@
 'use client'
-import { QRCodeSVG } from 'qrcode.react'
+import { QRCodeCanvas } from 'qrcode.react'
 import type { AgentFull } from '@/lib/types'
 
 // ---- helpers ----
@@ -27,26 +27,12 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
   }
 
   function downloadQR() {
-    const svg = document.getElementById('profile-qr')?.querySelector('svg')
-    if (!svg) return
-    const canvas = document.createElement('canvas')
-    canvas.width = 300
-    canvas.height = 300
-    const ctx = canvas.getContext('2d')!
-    const img = new Image()
-    const blob = new Blob([svg.outerHTML], { type: 'image/svg+xml' })
-    const url = URL.createObjectURL(blob)
-    img.onload = () => {
-      ctx.fillStyle = '#ffffff'
-      ctx.fillRect(0, 0, 300, 300)
-      ctx.drawImage(img, 0, 0, 300, 300)
-      URL.revokeObjectURL(url)
-      const a = document.createElement('a')
-      a.download = `qr-${agent.slug}.png`
-      a.href = canvas.toDataURL('image/png')
-      a.click()
-    }
-    img.src = url
+    const canvas = document.getElementById('profile-qr')?.querySelector('canvas')
+    if (!canvas) return
+    const a = document.createElement('a')
+    a.download = `qr-${agent.slug}.png`
+    a.href = canvas.toDataURL('image/png')
+    a.click()
   }
 
   return (
@@ -168,7 +154,9 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
           <div className="section-title"><span className="w-1.5 h-1.5 rounded-full bg-[#E31E24]" />ช่องทางติดต่อ</div>
           <div className="grid grid-cols-2 gap-2">
             {agent.line_id && (
-              <a href={'https://line.me/ti/p/' + agent.line_id}
+              <a href={agent.line_id.startsWith('@')
+                ? 'https://line.me/R/ti/p/' + agent.line_id
+                : 'https://line.me/ti/p/~' + agent.line_id}
                 className="flex items-center gap-2.5 p-3 rounded-xl border-[1.5px] border-[#06C755] bg-white">
                 <div className="w-8 h-8 rounded-lg bg-[#e8faf0] flex items-center justify-center flex-shrink-0">
                   <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#06C755" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
@@ -234,7 +222,7 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
           <div className="section-title"><span className="w-1.5 h-1.5 rounded-full bg-[#E31E24]" />QR Code ลิงก์โปรไฟล์</div>
           <div className="bg-[#f8f9ff] rounded-xl border border-[#e8ecf8] p-4 flex items-center gap-4">
             <div id="profile-qr" className="flex-shrink-0 p-2 bg-white rounded-xl border border-[#e8ecf8]">
-              <QRCodeSVG value={profileUrl} size={72} fgColor="#003087" bgColor="#ffffff" level="M" />
+              <QRCodeCanvas value={profileUrl} size={72} fgColor="#003087" bgColor="#ffffff" level="M" />
             </div>
             <div className="flex-1">
               <p className="text-[#003087] text-sm font-semibold mb-1">ลิงก์โปรไฟล์ส่วนตัว</p>

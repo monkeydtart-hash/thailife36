@@ -4,6 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase'
 import type { Agent, AgentProduct, AgentAward } from '@/lib/types'
+import ImageCropper from './ImageCropper'
 
 // ---- Sub-components ----
 
@@ -51,6 +52,7 @@ export default function DashboardClient() {
   const [activeTab, setActiveTab] = useState<'profile' | 'products' | 'awards'>('profile')
   const [avatarFile, setAvatarFile] = useState<File | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [cropSrc, setCropSrc] = useState<string | null>(null)
 
   useEffect(() => {
     loadData()
@@ -94,11 +96,17 @@ export default function DashboardClient() {
     setLoading(false)
   }
 
-  async function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
+  function handleAvatarChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
     if (!file) return
+    setCropSrc(URL.createObjectURL(file))
+    e.target.value = ''
+  }
+
+  function handleCropDone(file: File, preview: string) {
     setAvatarFile(file)
-    setAvatarPreview(URL.createObjectURL(file))
+    setAvatarPreview(preview)
+    setCropSrc(null)
   }
 
   async function saveProfile() {
@@ -218,6 +226,13 @@ export default function DashboardClient() {
 
   return (
     <div className="min-h-screen bg-white">
+      {cropSrc && (
+        <ImageCropper
+          imageSrc={cropSrc}
+          onDone={handleCropDone}
+          onCancel={() => setCropSrc(null)}
+        />
+      )}
       {/* Header */}
       <div className="bg-[#003087] px-5 py-3 flex items-center justify-between sticky top-0 z-10">
         <div className="flex items-center gap-3">
