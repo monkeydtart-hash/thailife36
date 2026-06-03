@@ -45,6 +45,7 @@ export default function DashboardClient() {
   const [products, setProducts] = useState<AgentProduct[]>([])
   const [awards, setAwards] = useState<AgentAward[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadError, setLoadError] = useState('')
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
   const [activeTab, setActiveTab] = useState<'profile' | 'products' | 'awards'>('profile')
@@ -66,7 +67,7 @@ export default function DashboardClient() {
       .single()
 
     if (agentError && agentError.code !== 'PGRST116') {
-      // transient error — keep session, show message
+      setLoadError(agentError.message)
       setLoading(false)
       return
     }
@@ -186,6 +187,19 @@ export default function DashboardClient() {
       </div>
     )
   }
+
+  if (loadError) return (
+    <div className="min-h-screen bg-white flex items-center justify-center px-5">
+      <div className="text-center">
+        <p className="text-red-500 text-sm mb-2">โหลดข้อมูลไม่สำเร็จ</p>
+        <p className="text-gray-400 text-xs mb-4">{loadError}</p>
+        <button onClick={() => { setLoadError(''); setLoading(true); loadData() }}
+          className="text-[#003087] text-sm border border-[#003087]/30 px-4 py-2 rounded-xl">
+          ลองใหม่
+        </button>
+      </div>
+    </div>
+  )
 
   if (!agent) return null
 
