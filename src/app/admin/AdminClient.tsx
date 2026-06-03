@@ -2,14 +2,18 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase'
-import type { Agent } from '@/lib/types'
+import type { Agent, News } from '@/lib/types'
 
 export default function AdminClient() {
   const router = useRouter()
   const supabase = createClient()
   const [agents, setAgents] = useState<Agent[]>([])
+  const [news, setNews] = useState<News[]>([])
   const [loading, setLoading] = useState(true)
   const [actionError, setActionError] = useState('')
+  const [newTitle, setNewTitle] = useState('')
+  const [newContent, setNewContent] = useState('')
+  const [addingNews, setAddingNews] = useState(false)
 
   useEffect(() => { loadData() }, [])
 
@@ -22,11 +26,19 @@ export default function AdminClient() {
 
     if (!myAgent?.is_admin) return router.push('/dashboard')
 
-    const { data } = await supabase
+    const { data: agentsData } = await supabase
       .from('agents')
       .select('*')
       .order('created_at', { ascending: false })
-    setAgents(data || [])
+    setAgents(agentsData || [])
+
+    const { data: newsData } = await supabase
+      .from('news')
+      .select('*')
+      .order('sort_order')
+      .order('created_at', { ascending: false })
+    setNews(newsData || [])
+
     setLoading(false)
   }
 
@@ -51,6 +63,33 @@ export default function AdminClient() {
     const { error } = await supabase.from('agents').update({ is_admin: !current }).eq('id', id)
     if (error) return setActionError('แก้ไขสิทธิ์ไม่สำเร็จ: ' + error.message)
     setAgents(a => a.map(x => x.id === id ? { ...x, is_admin: !current } : x))
+  }
+
+  async function addNews() {
+    if (!newTitle.trim()) return
+    setAddingNews(true)
+    const { data, error } = await supabase
+      .from('news')
+      .insert({ title: newTitle.trim(), content: newContent.trim() || null })
+      .select().single()
+    setAddingNews(false)
+    if (error) return setActionError('เพิ่มข่าวไม่สำเร็จ: ' + error.message)
+    setNews(n => [data, ...n])
+    setNewTitle('')
+    setNewContent('')
+  }
+
+  async function deleteNews(id: string) {
+    if (!confirm('ลบข่าวนี้ออกไหม?')) return
+    const { error } = await supabase.from('news').delete().eq('id', id)
+    if (error) return setActionError('ลบข่าวไม่สำเร็จ: ' + error.message)
+    setNews(n => n.filter(x => x.id !== id))
+  }
+
+  async function toggleNews(id: string, current: boolean) {
+    const { error } = await supabase.from('news').update({ is_published: !current }).eq('id', id)
+    if (error) return setActionError('แก้ไขไม่สำเร็จ: ' + error.message)
+    setNews(n => n.map(x => x.id === id ? { ...x, is_published: !current } : x))
   }
 
   const pending = agents.filter(a => !a.is_active)
@@ -177,6 +216,63 @@ export default function AdminClient() {
           <p className="text-gray-400 text-xs mt-2 text-center">
             แต่งตั้ง Admin ได้จากรายชื่อ "อนุมัติแล้ว" — กด ✓ Active แล้วเลือก "แต่งตั้ง Admin"
           </p>
+        </div>
+
+        {/* News */}
+        <div>
+          <h2 className="text-[#003087] font-bold text-base mb-3">ข่าวสารและประกาศ</h2>
+
+          {/* Add news form */}
+          <div className="bg-white rounded-xl border border-[#e8ecf8] p-4 mb-3 space-y-2">
+            <input
+              className="input-field"
+              placeholder="หัวข้อข่าว *"
+              value={newTitle}
+              onChange={e => setNewTitle(e.target.value)}
+            />
+            <textarea
+              className="input-field resize-none"
+              rows={2}
+              placeholder="เนื้อหา (ไม่บังคับ)"
+              value={newContent}
+              onChange={e => setNewContent(e.target.value)}
+            />
+            <button
+              onClick={addNews}
+              disabled={addingNews || !newTitle.trim()}
+              className="w-full bg-[#003087] text-white text-sm font-semibold py-2 rounded-xl hover:bg-[#002060] transition-colors disabled:opacity-40">
+              {addingNews ? 'กำลังเพิ่ม...' : '+ เพิ่มข่าว'}
+            </button>
+          </div>
+
+          {/* News list */}
+          <div className="space-y-2">
+            {news.length === 0 && (
+              <div className="bg-white rounded-xl border border-gray-100 px-4 py-6 text-center text-gray-400 text-sm">
+                ยังไม่มีข่าว
+              </div>
+            )}
+            {news.map(item => (
+              <div key={item.id} className={`bg-white rounded-xl border px-4 py-3 ${item.is_published ? 'border-[#e8ecf8]' : 'border-gray-100 opacity-50'}`}>
+                <div className="flex items-start justify-between gap-2 mb-1">
+                  <p className="text-[#003087] text-sm font-semibold leading-snug">{item.title}</p>
+                  <div className="flex items-center gap-1 flex-shrink-0">
+                    <button
+                      onClick={() => toggleNews(item.id, item.is_published)}
+                      className={`text-[10px] px-2 py-0.5 rounded-full border font-medium transition-colors ${
+                        item.is_published
+                          ? 'text-green-600 border-green-200 bg-green-50'
+                          : 'text-gray-400 border-gray-200 bg-gray-50'
+                      }`}>
+                      {item.is_published ? 'เผยแพร่' : 'ซ่อน'}
+                    </button>
+                    <button onClick={() => deleteNews(item.id)} className="text-red-400 text-xs hover:text-red-600 px-1">✕</button>
+                  </div>
+                </div>
+                {item.content && <p className="text-gray-400 text-xs leading-relaxed">{item.content}</p>}
+              </div>
+            ))}
+          </div>
         </div>
 
       </div>

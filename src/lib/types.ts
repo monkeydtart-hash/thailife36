@@ -41,6 +41,15 @@ export type AgentAward = {
   sort_order: number
 }
 
+export type News = {
+  id: string
+  title: string
+  content: string | null
+  is_published: boolean
+  sort_order: number
+  created_at: string
+}
+
 export type AgentFull = Agent & {
   agent_products: AgentProduct[]
   agent_awards: AgentAward[]
