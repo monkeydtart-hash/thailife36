@@ -45,8 +45,17 @@ export default function AdminClient() {
     setAgents(a => a.filter(x => x.id !== id))
   }
 
+  async function toggleAdmin(id: string, current: boolean) {
+    if (current && !confirm('ถอดสิทธิ์ Admin คนนี้ออกไหม?')) return
+    setActionError('')
+    const { error } = await supabase.from('agents').update({ is_admin: !current }).eq('id', id)
+    if (error) return setActionError('แก้ไขสิทธิ์ไม่สำเร็จ: ' + error.message)
+    setAgents(a => a.map(x => x.id === id ? { ...x, is_admin: !current } : x))
+  }
+
   const pending = agents.filter(a => !a.is_active)
   const approved = agents.filter(a => a.is_active)
+  const admins = agents.filter(a => a.is_admin)
 
   if (loading) return (
     <div className="min-h-screen bg-white flex items-center justify-center">
@@ -126,12 +135,48 @@ export default function AdminClient() {
               <div key={agent.id} className="bg-white rounded-xl border border-gray-100 px-4 py-3 flex items-center justify-between">
                 <div>
                   <p className="font-semibold text-[#003087] text-sm">{agent.full_name}</p>
-                  <p className="text-gray-400 text-xs">/{agent.slug}{agent.is_admin ? ' · Admin' : ''}</p>
+                  <p className="text-gray-400 text-xs">/{agent.slug}</p>
                 </div>
-                <span className="text-green-600 text-[11px]">✓ Active</span>
+                <div className="flex items-center gap-2">
+                  {agent.is_admin ? (
+                    <span className="text-[#F5A623] text-[10px] bg-[#F5A623]/10 border border-[#F5A623]/30 px-2 py-0.5 rounded-full font-semibold">Admin</span>
+                  ) : (
+                    <button
+                      onClick={() => toggleAdmin(agent.id, false)}
+                      className="text-[#003087] text-[11px] border border-[#003087]/30 px-2 py-1 rounded-lg hover:bg-[#003087]/5 transition-colors">
+                      + แต่งตั้ง Admin
+                    </button>
+                  )}
+                  <span className="text-green-600 text-[11px]">✓</span>
+                </div>
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Admins */}
+        <div>
+          <h2 className="text-[#003087] font-bold text-base mb-3">
+            ผู้ดูแลระบบ <span className="bg-[#F5A623] text-white text-xs px-2 py-0.5 rounded-full ml-1">{admins.length}</span>
+          </h2>
+          <div className="space-y-2">
+            {admins.map(agent => (
+              <div key={agent.id} className="bg-white rounded-xl border border-[#F5A623]/30 px-4 py-3 flex items-center justify-between">
+                <div>
+                  <p className="font-semibold text-[#003087] text-sm">{agent.full_name}</p>
+                  <p className="text-gray-400 text-xs">/{agent.slug}</p>
+                </div>
+                <button
+                  onClick={() => toggleAdmin(agent.id, agent.is_admin)}
+                  className="text-red-400 text-xs border border-red-200 px-3 py-1.5 rounded-lg hover:bg-red-50 transition-colors">
+                  ถอดสิทธิ์
+                </button>
+              </div>
+            ))}
+          </div>
+          <p className="text-gray-400 text-xs mt-2 text-center">
+            แต่งตั้ง Admin ได้จากรายชื่อ "อนุมัติแล้ว" — กด ✓ Active แล้วเลือก "แต่งตั้ง Admin"
+          </p>
         </div>
 
       </div>
