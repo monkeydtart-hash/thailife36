@@ -321,7 +321,7 @@ export default function DashboardClient() {
                 <p className="text-sm font-semibold text-[#003087] mb-1">{agent.full_name}</p>
                 <label className="cursor-pointer text-xs text-[#003087] border border-[#003087]/30 px-3 py-1.5 rounded-lg hover:bg-[#003087]/5 transition-colors">
                   เปลี่ยนรูปโปรไฟล์
-                  <input type="file" accept="image/*" className="hidden" onChange={handleAvatarChange} />
+                  <input type="file" accept="image/*,.jpg,.jpeg,.png,.gif,.webp" className="hidden" onChange={handleAvatarChange} />
                 </label>
               </div>
             </div>
