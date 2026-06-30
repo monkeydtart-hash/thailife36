@@ -6,6 +6,16 @@ import { createClient } from '@/lib/supabase'
 import type { Agent, AgentProduct, AgentAward, AgentVideo } from '@/lib/types'
 import ImageCropper from './ImageCropper'
 
+// ---- Video platform detection ----
+function detectPlatform(url: string) {
+  if (!url) return null
+  if (/youtu\.be\/|youtube\.com/.test(url)) return { label: 'YouTube', color: '#FF0000', icon: '▶' }
+  if (/tiktok\.com/.test(url)) return { label: 'TikTok', color: '#010101', icon: '♪' }
+  if (/facebook\.com|fb\.watch/.test(url)) return { label: 'Facebook', color: '#1877F2', icon: 'f' }
+  if (/instagram\.com/.test(url)) return { label: 'Instagram', color: '#E1306C', icon: '◉' }
+  return null
+}
+
 // ---- Sub-components ----
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
@@ -481,21 +491,46 @@ export default function DashboardClient() {
         {/* ---- TAB: VIDEOS ---- */}
         {activeTab === 'videos' && (
           <div className="space-y-3">
-            <p className="text-xs text-gray-400">เพิ่มได้สูงสุด 5 คลิป — วางลิงก์ YouTube แล้วกดบันทึก</p>
-            {videos.map((vid, i) => (
-              <div key={vid.id} className="card space-y-2.5">
-                <div className="flex items-center justify-between">
-                  <span className="text-xs font-semibold text-[#003087]">คลิปที่ {i + 1}</span>
-                  <button onClick={() => deleteVideo(vid.id)} className="text-red-400 text-xs hover:text-red-600">ลบ</button>
-                </div>
-                <input className="input-field" placeholder="ชื่อคลิป (ไม่บังคับ)"
-                  value={vid.title || ''}
-                  onChange={e => updateVideo(vid.id, { title: e.target.value })} />
-                <input className="input-field" placeholder="https://youtu.be/..."
-                  value={vid.youtube_url}
-                  onChange={e => updateVideo(vid.id, { youtube_url: e.target.value })} />
+            <div className="bg-[#f8faff] border border-[#003087]/10 rounded-xl px-3 py-2.5 text-xs text-gray-500 space-y-1">
+              <p className="font-semibold text-[#003087]">รองรับโซเชียลมีเดีย</p>
+              <div className="flex flex-wrap gap-2 mt-1">
+                {[
+                  { label: 'YouTube', color: '#FF0000' },
+                  { label: 'TikTok', color: '#010101' },
+                  { label: 'Facebook', color: '#1877F2' },
+                  { label: 'Instagram', color: '#E1306C' },
+                ].map(p => (
+                  <span key={p.label} className="px-2 py-0.5 rounded-full text-white text-[10px] font-semibold" style={{ backgroundColor: p.color }}>
+                    {p.label}
+                  </span>
+                ))}
               </div>
-            ))}
+              <p className="text-[10px] text-gray-400 mt-1">วางลิงก์จากแพลตฟอร์มข้างต้น · เพิ่มได้สูงสุด 5 คลิป</p>
+            </div>
+            {videos.map((vid, i) => {
+              const plat = detectPlatform(vid.youtube_url)
+              return (
+                <div key={vid.id} className="card space-y-2.5">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs font-semibold text-[#003087]">คลิปที่ {i + 1}</span>
+                      {plat && (
+                        <span className="text-[10px] text-white px-2 py-0.5 rounded-full font-semibold" style={{ backgroundColor: plat.color }}>
+                          {plat.icon} {plat.label}
+                        </span>
+                      )}
+                    </div>
+                    <button onClick={() => deleteVideo(vid.id)} className="text-red-400 text-xs hover:text-red-600">ลบ</button>
+                  </div>
+                  <input className="input-field" placeholder="ชื่อคลิป (ไม่บังคับ)"
+                    value={vid.title || ''}
+                    onChange={e => updateVideo(vid.id, { title: e.target.value })} />
+                  <input className="input-field" placeholder="วางลิงก์ YouTube / TikTok / Facebook / Instagram..."
+                    value={vid.youtube_url}
+                    onChange={e => updateVideo(vid.id, { youtube_url: e.target.value })} />
+                </div>
+              )
+            })}
             {videos.length < 5 ? (
               <button onClick={addVideo}
                 className="w-full py-3 border-2 border-dashed border-[#003087]/30 rounded-xl text-[#003087] text-sm font-semibold hover:border-[#003087] hover:bg-[#003087]/5 transition-colors">

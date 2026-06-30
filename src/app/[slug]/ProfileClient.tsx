@@ -3,9 +3,80 @@ import { QRCodeCanvas } from 'qrcode.react'
 import type { AgentFull } from '@/lib/types'
 
 // ---- helpers ----
-function getYouTubeId(url: string) {
-  const m = url.match(/(?:youtu\.be\/|v=|\/embed\/)([^?&]+)/)
-  return m ? m[1] : null
+type VideoInfo =
+  | { platform: 'youtube'; id: string }
+  | { platform: 'tiktok'; id: string }
+  | { platform: 'facebook'; url: string }
+  | { platform: 'instagram'; shortcode: string }
+  | { platform: 'unknown' }
+
+function detectVideo(url: string): VideoInfo {
+  if (!url) return { platform: 'unknown' }
+  // YouTube (watch, short url, shorts)
+  const yt = url.match(/(?:youtu\.be\/|[?&]v=|\/embed\/|\/shorts\/)([A-Za-z0-9_-]{11})/)
+  if (yt) return { platform: 'youtube', id: yt[1] }
+  // TikTok
+  const tt = url.match(/tiktok\.com\/.+\/video\/(\d+)/)
+  if (tt) return { platform: 'tiktok', id: tt[1] }
+  // Facebook
+  if (url.includes('facebook.com') || url.includes('fb.watch'))
+    return { platform: 'facebook', url }
+  // Instagram reel or post
+  const ig = url.match(/instagram\.com\/(?:p|reel)\/([A-Za-z0-9_-]+)/)
+  if (ig) return { platform: 'instagram', shortcode: ig[1] }
+  return { platform: 'unknown' }
+}
+
+function VideoEmbed({ url }: { url: string }) {
+  const info = detectVideo(url)
+  if (info.platform === 'youtube') {
+    return (
+      <div className="rounded-xl overflow-hidden border border-[#003087]/10 max-w-xs mx-auto" style={{ aspectRatio: '16/9' }}>
+        <iframe src={`https://www.youtube.com/embed/${info.id}`}
+          className="w-full h-full"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen />
+      </div>
+    )
+  }
+  if (info.platform === 'tiktok') {
+    return (
+      <div className="rounded-xl overflow-hidden border border-[#003087]/10 mx-auto" style={{ maxWidth: 220, aspectRatio: '9/16' }}>
+        <iframe src={`https://www.tiktok.com/embed/v2/${info.id}`}
+          className="w-full h-full"
+          allow="autoplay"
+          allowFullScreen />
+      </div>
+    )
+  }
+  if (info.platform === 'facebook') {
+    const encoded = encodeURIComponent(info.url)
+    return (
+      <div className="rounded-xl overflow-hidden border border-[#003087]/10 max-w-xs mx-auto" style={{ aspectRatio: '16/9' }}>
+        <iframe
+          src={`https://www.facebook.com/plugins/video.php?href=${encoded}&show_text=false&width=400`}
+          className="w-full h-full"
+          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
+          allowFullScreen />
+      </div>
+    )
+  }
+  if (info.platform === 'instagram') {
+    return (
+      <div className="rounded-xl overflow-hidden border border-[#003087]/10 max-w-xs mx-auto" style={{ aspectRatio: '4/5' }}>
+        <iframe src={`https://www.instagram.com/p/${info.shortcode}/embed/`}
+          className="w-full h-full"
+          allowFullScreen />
+      </div>
+    )
+  }
+  // fallback: link
+  return (
+    <a href={url} target="_blank" rel="noopener noreferrer"
+      className="flex items-center gap-2 text-[#003087] text-sm underline py-2">
+      ▶ ดูวิดีโอ
+    </a>
+  )
 }
 
 const categoryLabel: Record<string, string> = {
@@ -19,8 +90,7 @@ const categoryBg: Record<string, string> = {
 // ---- Component ----
 export default function ProfileClient({ agent }: { agent: AgentFull }) {
   const profileUrl = `https://thailife36.com/${agent.slug}`
-  const videoId = agent.video_url ? getYouTubeId(agent.video_url) : null
-  const videos = agent.agent_videos?.filter(v => getYouTubeId(v.youtube_url)) || []
+  const videos = agent.agent_videos?.filter(v => detectVideo(v.youtube_url).platform !== 'unknown') || []
   const initials = agent.full_name.slice(0, 1)
 
   function copyLink() {
@@ -99,23 +169,12 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
           <div className="section-title"><span className="w-1.5 h-1.5 rounded-full bg-[#E31E24]" />วิดีโอแนะนำตัว</div>
           {videos.length > 0 ? (
             <div className="space-y-3">
-              {videos.map(vid => {
-                const id = getYouTubeId(vid.youtube_url)
-                if (!id) return null
-                return (
-                  <div key={vid.id}>
-                    {vid.title && <p className="text-[#003087] text-xs font-semibold mb-1.5">{vid.title}</p>}
-                    <div className="rounded-xl overflow-hidden border border-[#003087]/10 max-w-xs mx-auto" style={{ aspectRatio: '16/9' }}>
-                      <iframe
-                        src={`https://www.youtube.com/embed/${id}`}
-                        className="w-full h-full"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                        allowFullScreen
-                      />
-                    </div>
-                  </div>
-                )
-              })}
+              {videos.map(vid => (
+                <div key={vid.id}>
+                  {vid.title && <p className="text-[#003087] text-xs font-semibold mb-1.5">{vid.title}</p>}
+                  <VideoEmbed url={vid.youtube_url} />
+                </div>
+              ))}
             </div>
           ) : (
             <div className="bg-[#001440] rounded-xl h-32 flex flex-col items-center justify-center gap-2 border border-[#003087]/12">
