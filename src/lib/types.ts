@@ -12,6 +12,9 @@ export type Agent = {
   phone: string | null
   line_id: string | null
   facebook_url: string | null
+  instagram_url: string | null
+  tiktok_url: string | null
+  youtube_channel_url: string | null
   booking_url: string | null
   profile_url: string
   is_active: boolean

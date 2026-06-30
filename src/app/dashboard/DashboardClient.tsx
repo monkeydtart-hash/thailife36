@@ -398,6 +398,18 @@ export default function DashboardClient() {
               placeholder="https://facebook.com/..."
               value={agent.facebook_url || ''}
               onChange={e => setAgent(a => a ? { ...a, facebook_url: e.target.value } : a)} />
+            <InputField label="Instagram URL"
+              placeholder="https://instagram.com/..."
+              value={agent.instagram_url || ''}
+              onChange={e => setAgent(a => a ? { ...a, instagram_url: e.target.value } : a)} />
+            <InputField label="TikTok URL"
+              placeholder="https://tiktok.com/@..."
+              value={agent.tiktok_url || ''}
+              onChange={e => setAgent(a => a ? { ...a, tiktok_url: e.target.value } : a)} />
+            <InputField label="YouTube Channel URL"
+              placeholder="https://youtube.com/@..."
+              value={agent.youtube_channel_url || ''}
+              onChange={e => setAgent(a => a ? { ...a, youtube_channel_url: e.target.value } : a)} />
             <InputField label="ลิงก์นัดหมาย (Calendly หรืออื่นๆ)"
               placeholder="https://..."
               value={agent.booking_url || ''}

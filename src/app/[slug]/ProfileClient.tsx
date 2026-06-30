@@ -253,33 +253,71 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
                 <svg className="w-5 h-5 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
               </a>
             )}
-            <div className="grid grid-cols-2 gap-3">
-              {agent.facebook_url && (
-                <a href={agent.facebook_url} target="_blank" rel="noopener noreferrer"
-                  className="flex flex-col items-center gap-2 py-4 rounded-2xl active:scale-95 transition-transform"
-                  style={{ background: 'linear-gradient(135deg, #1877F2 0%, #0c5dd6 100%)', boxShadow: '0 4px 14px rgba(24,119,242,0.30)' }}>
-                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="white">
-                      <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95C18.05 21.45 22 17.19 22 12z"/>
-                    </svg>
-                  </div>
-                  <p className="text-white font-bold text-xs">Facebook</p>
-                </a>
-              )}
-              {agent.booking_url && (
-                <a href={agent.booking_url} target="_blank" rel="noopener noreferrer"
-                  className="flex flex-col items-center gap-2 py-4 rounded-2xl active:scale-95 transition-transform"
-                  style={{ background: 'linear-gradient(135deg, #E31E24 0%, #b5151a 100%)', boxShadow: '0 4px 14px rgba(227,30,36,0.30)' }}>
-                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
-                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
-                      <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                  </div>
-                  <p className="text-white font-bold text-xs">นัดหมาย</p>
-                </a>
-              )}
-            </div>
+            {(agent.facebook_url || agent.instagram_url || agent.tiktok_url || agent.youtube_channel_url || agent.booking_url) && (
+              <div className="grid grid-cols-3 gap-3">
+                {agent.facebook_url && (
+                  <a href={agent.facebook_url} target="_blank" rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-2 py-4 rounded-2xl active:scale-95 transition-transform"
+                    style={{ background: 'linear-gradient(135deg, #1877F2 0%, #0c5dd6 100%)', boxShadow: '0 4px 14px rgba(24,119,242,0.30)' }}>
+                    <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="white">
+                        <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95C18.05 21.45 22 17.19 22 12z"/>
+                      </svg>
+                    </div>
+                    <p className="text-white font-bold text-[11px]">Facebook</p>
+                  </a>
+                )}
+                {agent.instagram_url && (
+                  <a href={agent.instagram_url} target="_blank" rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-2 py-4 rounded-2xl active:scale-95 transition-transform"
+                    style={{ background: 'linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)', boxShadow: '0 4px 14px rgba(220,39,67,0.30)' }}>
+                    <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="white" stroke="none"/>
+                      </svg>
+                    </div>
+                    <p className="text-white font-bold text-[11px]">Instagram</p>
+                  </a>
+                )}
+                {agent.tiktok_url && (
+                  <a href={agent.tiktok_url} target="_blank" rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-2 py-4 rounded-2xl active:scale-95 transition-transform"
+                    style={{ background: 'linear-gradient(135deg, #010101 0%, #1a1a1a 100%)', boxShadow: '0 4px 14px rgba(0,0,0,0.25)' }}>
+                    <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="white">
+                        <path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.85a8.2 8.2 0 004.79 1.53V6.93a4.85 4.85 0 01-1.02-.24z"/>
+                      </svg>
+                    </div>
+                    <p className="text-white font-bold text-[11px]">TikTok</p>
+                  </a>
+                )}
+                {agent.youtube_channel_url && (
+                  <a href={agent.youtube_channel_url} target="_blank" rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-2 py-4 rounded-2xl active:scale-95 transition-transform"
+                    style={{ background: 'linear-gradient(135deg, #FF0000 0%, #cc0000 100%)', boxShadow: '0 4px 14px rgba(255,0,0,0.25)' }}>
+                    <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="white">
+                        <path d="M23 7s-.3-1.9-1.2-2.7c-1.1-1.2-2.4-1.2-3-1.3C16.2 3 12 3 12 3s-4.2 0-6.8.1c-.6.1-1.9.1-3 1.3C1.3 5.2 1 7 1 7S.7 9.1.7 11.3v2c0 2.1.3 4.3.3 4.3s.3 1.9 1.2 2.7c1.1 1.2 2.6 1.1 3.3 1.2C7.3 21.6 12 21.7 12 21.7s4.2 0 6.8-.2c.6-.1 1.9-.1 3-1.3.9-.8 1.2-2.7 1.2-2.7s.3-2.1.3-4.3v-2C23.3 9.1 23 7 23 7zM9.7 15.5V8.4l8.1 3.6-8.1 3.5z"/>
+                      </svg>
+                    </div>
+                    <p className="text-white font-bold text-[11px]">YouTube</p>
+                  </a>
+                )}
+                {agent.booking_url && (
+                  <a href={agent.booking_url} target="_blank" rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-2 py-4 rounded-2xl active:scale-95 transition-transform"
+                    style={{ background: 'linear-gradient(135deg, #E31E24 0%, #b5151a 100%)', boxShadow: '0 4px 14px rgba(227,30,36,0.30)' }}>
+                    <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                      <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+                        <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                      </svg>
+                    </div>
+                    <p className="text-white font-bold text-[11px]">นัดหมาย</p>
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </section>
 
