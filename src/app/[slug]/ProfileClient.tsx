@@ -218,66 +218,68 @@ export default function ProfileClient({ agent }: { agent: AgentFull }) {
         {/* CONTACT */}
         <section className="px-4 pt-4 pb-1">
           <div className="section-title"><span className="w-1.5 h-1.5 rounded-full bg-[#E31E24]" />ช่องทางติดต่อ</div>
-          <div className="grid grid-cols-2 gap-2">
+          <div className="flex flex-col gap-3">
             {agent.line_id && (
               <a href={agent.line_id.startsWith('@')
                 ? 'https://line.me/R/ti/p/' + agent.line_id
                 : 'https://line.me/ti/p/~' + agent.line_id}
-                className="flex items-center gap-2.5 p-3 rounded-xl border-[1.5px] border-[#06C755] bg-white">
-                <div className="w-8 h-8 rounded-lg bg-[#e8faf0] flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#06C755" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform"
+                style={{ background: 'linear-gradient(135deg, #06C755 0%, #04a844 100%)', boxShadow: '0 4px 14px rgba(6,199,85,0.35)' }}>
+                <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M21 11.5C21 16.75 16.02 21 12 21c-1.1 0-2.15-.18-3.13-.52L4 21.5l1.1-4.19A9.1 9.1 0 013 11.5C3 6.25 7.02 2 12 2s9 4.25 9 9.5z"/>
                   </svg>
                 </div>
-                <div>
-                  <p className="text-[#05a847] text-xs font-semibold leading-tight">LINE</p>
-                  <p className="text-[#05a847]/70 text-[10px]">{agent.line_id}</p>
+                <div className="flex-1">
+                  <p className="text-white font-bold text-sm leading-tight">แชทผ่าน LINE</p>
+                  <p className="text-white/75 text-xs mt-0.5">{agent.line_id}</p>
                 </div>
+                <svg className="w-5 h-5 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
               </a>
             )}
             {agent.phone && (
               <a href={'tel:' + agent.phone}
-                className="flex items-center gap-2.5 p-3 rounded-xl border-[1.5px] border-[#003087] bg-white">
-                <div className="w-8 h-8 rounded-lg bg-[#e6ecf8] flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#003087" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                className="flex items-center gap-4 px-5 py-4 rounded-2xl active:scale-95 transition-transform"
+                style={{ background: 'linear-gradient(135deg, #003087 0%, #001a5e 100%)', boxShadow: '0 4px 14px rgba(0,48,135,0.30)' }}>
+                <div className="w-11 h-11 rounded-xl bg-white/20 flex items-center justify-center flex-shrink-0">
+                  <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                     <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1C9.61 21 3 14.39 3 6c0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.24 1.02l-2.21 2.2z"/>
                   </svg>
                 </div>
-                <div>
-                  <p className="text-[#003087] text-xs font-semibold leading-tight">โทรหาผม</p>
-                  <p className="text-[#003087]/60 text-[10px]">{agent.phone}</p>
+                <div className="flex-1">
+                  <p className="text-white font-bold text-sm leading-tight">โทรหาผม</p>
+                  <p className="text-white/75 text-xs mt-0.5">{agent.phone}</p>
                 </div>
+                <svg className="w-5 h-5 text-white/60" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M9 18l6-6-6-6"/></svg>
               </a>
             )}
-            {agent.facebook_url && (
-              <a href={agent.facebook_url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2.5 p-3 rounded-xl border-[1.5px] border-[#1877F2] bg-white">
-                <div className="w-8 h-8 rounded-lg bg-[#e8f0fe] flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="#1877F2">
-                    <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95C18.05 21.45 22 17.19 22 12z"/>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-[#1877F2] text-xs font-semibold leading-tight">Facebook</p>
-                  <p className="text-[#1877F2]/60 text-[10px]">ติดตาม</p>
-                </div>
-              </a>
-            )}
-            {agent.booking_url && (
-              <a href={agent.booking_url} target="_blank" rel="noopener noreferrer"
-                className="flex items-center gap-2.5 p-3 rounded-xl border-[1.5px] border-[#E31E24] bg-white">
-                <div className="w-8 h-8 rounded-lg bg-[#fdeaea] flex items-center justify-center flex-shrink-0">
-                  <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="#E31E24" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
-                    <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
-                  </svg>
-                </div>
-                <div>
-                  <p className="text-[#E31E24] text-xs font-semibold leading-tight">นัดหมาย</p>
-                  <p className="text-[#E31E24]/60 text-[10px]">จองคิวออนไลน์</p>
-                </div>
-              </a>
-            )}
+            <div className="grid grid-cols-2 gap-3">
+              {agent.facebook_url && (
+                <a href={agent.facebook_url} target="_blank" rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 py-4 rounded-2xl active:scale-95 transition-transform"
+                  style={{ background: 'linear-gradient(135deg, #1877F2 0%, #0c5dd6 100%)', boxShadow: '0 4px 14px rgba(24,119,242,0.30)' }}>
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="white">
+                      <path d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95C18.05 21.45 22 17.19 22 12z"/>
+                    </svg>
+                  </div>
+                  <p className="text-white font-bold text-xs">Facebook</p>
+                </a>
+              )}
+              {agent.booking_url && (
+                <a href={agent.booking_url} target="_blank" rel="noopener noreferrer"
+                  className="flex flex-col items-center gap-2 py-4 rounded-2xl active:scale-95 transition-transform"
+                  style={{ background: 'linear-gradient(135deg, #E31E24 0%, #b5151a 100%)', boxShadow: '0 4px 14px rgba(227,30,36,0.30)' }}>
+                  <div className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center">
+                    <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+                      <rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/>
+                      <line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/>
+                    </svg>
+                  </div>
+                  <p className="text-white font-bold text-xs">นัดหมาย</p>
+                </a>
+              )}
+            </div>
           </div>
         </section>
 
