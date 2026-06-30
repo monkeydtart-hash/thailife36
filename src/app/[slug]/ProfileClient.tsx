@@ -31,7 +31,7 @@ function VideoEmbed({ url }: { url: string }) {
   const info = detectVideo(url)
   if (info.platform === 'youtube') {
     return (
-      <div className="rounded-xl overflow-hidden border border-[#003087]/10 w-full" style={{ aspectRatio: '16/9' }}>
+      <div className="rounded-xl overflow-hidden border border-[#003087]/10 mx-auto" style={{ maxWidth: 300, aspectRatio: '16/9' }}>
         <iframe src={`https://www.youtube.com/embed/${info.id}`}
           className="w-full h-full"
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -41,7 +41,7 @@ function VideoEmbed({ url }: { url: string }) {
   }
   if (info.platform === 'tiktok') {
     return (
-      <div className="rounded-xl overflow-hidden border border-[#003087]/10 mx-auto" style={{ maxWidth: 360, aspectRatio: '9/16' }}>
+      <div className="rounded-xl overflow-hidden border border-[#003087]/10 mx-auto" style={{ maxWidth: 300, aspectRatio: '9/16' }}>
         <iframe src={`https://www.tiktok.com/embed/v2/${info.id}`}
           className="w-full h-full"
           allow="autoplay"
@@ -52,9 +52,9 @@ function VideoEmbed({ url }: { url: string }) {
   if (info.platform === 'facebook') {
     const encoded = encodeURIComponent(info.url)
     return (
-      <div className="rounded-xl overflow-hidden border border-[#003087]/10 w-full" style={{ aspectRatio: '16/9' }}>
+      <div className="rounded-xl overflow-hidden border border-[#003087]/10 mx-auto" style={{ maxWidth: 300, aspectRatio: '16/9' }}>
         <iframe
-          src={`https://www.facebook.com/plugins/video.php?href=${encoded}&show_text=false&width=560`}
+          src={`https://www.facebook.com/plugins/video.php?href=${encoded}&show_text=false&width=300`}
           className="w-full h-full"
           allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
           allowFullScreen />
@@ -63,7 +63,7 @@ function VideoEmbed({ url }: { url: string }) {
   }
   if (info.platform === 'instagram') {
     return (
-      <div className="rounded-xl overflow-hidden border border-[#003087]/10 w-full" style={{ aspectRatio: '4/5' }}>
+      <div className="rounded-xl overflow-hidden border border-[#003087]/10 mx-auto" style={{ maxWidth: 300, aspectRatio: '4/5' }}>
         <iframe src={`https://www.instagram.com/p/${info.shortcode}/embed/`}
           className="w-full h-full"
           allowFullScreen />
